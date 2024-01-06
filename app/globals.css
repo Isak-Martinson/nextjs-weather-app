@@ -1,3 +1,24 @@
+@font-face {
+  font-family: texGyreHeros;
+  src: url("/fonts/texgyreheros-regular.otf") format("opentype");
+}
+
+@font-face {
+  font-family: texGyreHerosItalic;
+  src: url("/fonts/texgyreheros-italic.otf") format("opentype");
+}
+
+@font-face {
+  font-family: texGyreHerosBold;
+  src: url("/fonts/texgyreheros-bold.otf") format("opentype");
+}
+
+*{
+  font-family: texGyreHeros, sans-serif;
+  box-sizing: border-box;
+}
+
 body {
   background-color: #DADADA;
+  margin: 0;
 }
