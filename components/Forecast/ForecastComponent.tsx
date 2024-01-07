@@ -1,7 +1,5 @@
 import styles from './forecast.module.css';
 import {
-  Bookmark,
-  Droplet,
   Sun,
   Moon,
   Cloud,
@@ -12,61 +10,89 @@ import {
   AlignCenter,
 } from 'feather-icons-react';
 
+interface DailyData {
+  dt: number;
+  weather: [{ id: number; icon: string }];
+  main: { temp: number };
+}
+
+const getWeatherIcon = (icon: string) => {
+  switch (icon) {
+    case '01d':
+    case '01n':
+      return <Sun />;
+    case '02d':
+    case '02n':
+    case '03d':
+    case '03n':
+    case '04d':
+    case '04n':
+      return <Cloud />;
+    case '09d':
+    case '09n':
+      return <CloudDrizzle />;
+    case '10d':
+    case '10n':
+      return <CloudRain />;
+    case '11d':
+    case '11n':
+      return <CloudLightning />;
+    case '13d':
+    case '13n':
+      return <CloudSnow />;
+    case '50d':
+    case '50n':
+      return <AlignCenter />;
+    default:
+      return null;
+  }
+};
+
 const ForecastComponent = ({ data }: { data: any }) => {
-  console.log('forecast component: ', data);
-  const date = new Date().toDateString();
-  console.log(date);
-  const name = data.name;
-  const temp = Math.round(data.main.temp);
-  const weather = data.weather[0].main;
-  const icon = data.weather[0].icon;
+  const dailyForecastData = data?.list || [];
+
+  const dailyDataByDay = dailyForecastData.reduce(
+    (acc: any, current: any, index: number) => {
+      const date = new Date(current.dt * 1000);
+
+      if (date.getUTCHours() === 15) {
+        const dayKey = date.toISOString().split('T')[0];
+
+        if (!acc[dayKey]) {
+          acc[dayKey] = current;
+        }
+      }
+
+      return acc;
+    },
+    {}
+  );
+
+  const dailyForecastList: DailyData[] = Object.values(
+    dailyDataByDay
+  ) as DailyData[];
+
+  console.log('dailyForecastList, ', dailyForecastList);
 
   return (
-    <section>
-      <div>
-        <div id={styles.firstSection}>
-          <h1 id={styles.h1}>{name}</h1>
-          <p id={styles.date}>{date}</p>
-          <h2 id={styles.h2}>{temp}°</h2>
-        </div>
-        <div id={styles.secondSection}>
-          <div className={styles.conditionsContainer}>
-            {icon === '01d' ? (
-              <Sun className={styles.icon} />
-            ) : icon === '01n' ? (
-              <Moon className={styles.icon} />
-            ) : icon === '02d' ||
-              icon === '02n' ||
-              icon === '03d' ||
-              icon === '03n' ||
-              icon === '04d' ||
-              icon === '04n' ? (
-              <Cloud className={styles.icon} />
-            ) : icon === '09d' || icon === '09n' ? (
-              <CloudDrizzle className={styles.icon} />
-            ) : icon === '10d' || icon === '10n' ? (
-              <CloudRain className={styles.icon} />
-            ) : icon === '11d' || icon === '11n' ? (
-              <CloudLightning className={styles.icon} />
-            ) : icon === '13d' || icon === '13n' ? (
-              <CloudSnow className={styles.icon} />
-            ) : icon === '50d' || icon === '50n' ? (
-              <AlignCenter className={styles.icon} />
-            ) : null}
-
-            <p className={styles.p}>{weather}</p>
+    <section id={styles.section}>
+      <ul className={styles.ul}>
+        {dailyForecastList.map((test, index) => (
+          <div key={index} className={styles.forecastContainer}>
+            <li className={styles.li}>
+              {new Date(test.dt * 1000).toDateString().slice(0, 3)}
+            </li>
+            <div className={styles.weatherContainer}>
+              <p className={styles.temperature}>
+                {Math.round(test.main.temp)}°
+              </p>
+              {getWeatherIcon(test.weather[0].icon)}
+            </div>
           </div>
-          <div id={styles.rain} className={styles.conditionsContainer}>
-            <Droplet className={styles.icon} fill='#212121' />
-            <p className={styles.p}>Chance of rain:</p>
-          </div>
-          <div id={styles.save} className={styles.conditionsContainer}>
-            <Bookmark className={styles.icon} />
-            <p className={styles.p}>Save location</p>
-          </div>
-        </div>
-      </div>
+        ))}
+      </ul>
     </section>
   );
 };
+
 export default ForecastComponent;

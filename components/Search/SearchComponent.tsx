@@ -11,8 +11,9 @@ const SearchComponent = ({ handleApiCall }: { handleApiCall: Function }) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log('searchComponent CITY: ', city);
     handleApiCall(city);
+    const input = document.getElementById('search') as HTMLInputElement;
+    input.value = '';
   };
   return (
     <form
@@ -22,12 +23,14 @@ const SearchComponent = ({ handleApiCall }: { handleApiCall: Function }) => {
       }}
     >
       <input
+        autoComplete='off'
+        id='search'
         placeholder='Search by city'
         className={styles.input}
         onChange={(e) => handleInputChange(e)}
         type='text'
       />
-      <Search onClick={handleSubmit} />
+      {/* <Search onClick={handleSubmit} /> */}
     </form>
   );
 };

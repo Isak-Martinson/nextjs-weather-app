@@ -1,53 +1,29 @@
-.conditionsContainer {
+#section {
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.ul{padding: 0; margin: 16px 0 0 0;}
+
+.li {
+    list-style: none;
+}
+
+.forecastContainer{
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     margin-bottom: 16px;
 }
 
-#firstSection {
-    margin-bottom: 40px;
+.weatherContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
 }
 
-#secondSection {
-    /* margin-top: auto; */
-    display: grid;
-    grid-template-columns: 1fr 1fr ;
-    grid-template-rows: 1fr 1fr;
-}
-
-#h1 {
-    margin: 0 0 8px 0;
-    font-size: 2rem;
-}
-
-#h2 {
-    margin: 0 0 8px 0;
-    font-size: 2.5rem;
+.temperature {
     font-family: texGyreHerosBold;
-}
-
-#date {
-    /* font-style: italic; */
-    font-family: texGyreHerosItalic;
-    margin: 0;
-}
-
-.icon{
-    margin-right: 8px;
-}
-
-.p{
-    margin: 0;
-}
-
-#rain {
-    grid-row-start: 2;
-    grid-column-start: 1;
-}
-
-#save{
-    grid-row-start: 2;
-    grid-column-start: 2;
-    justify-content: flex-end;
+    margin: 0 24px 0 0;
 }
