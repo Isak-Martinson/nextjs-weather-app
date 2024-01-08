@@ -16,9 +16,11 @@
 *{
   font-family: texGyreHeros, sans-serif;
   box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
   background-color: #DADADA;
   margin: 0;
+  height: 100vh;
 }

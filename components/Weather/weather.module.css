@@ -17,12 +17,12 @@
 }
 
 #h1 {
-    margin: 0 0 8px 0;
+    margin:0;
     font-size: 2rem;
 }
 
 #h2 {
-    margin: 0 0 8px 0;
+    margin: 0 0 56px 0;
     font-size: 2.5rem;
     font-family: texGyreHerosBold;
 }

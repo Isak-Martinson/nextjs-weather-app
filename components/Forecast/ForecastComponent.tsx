@@ -72,8 +72,6 @@ const ForecastComponent = ({ data }: { data: any }) => {
     dailyDataByDay
   ) as DailyData[];
 
-  console.log('dailyForecastList, ', dailyForecastList);
-
   return (
     <section id={styles.section}>
       <ul className={styles.ul}>
