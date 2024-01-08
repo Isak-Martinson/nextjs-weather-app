@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import styles from './weather.module.css';
 import {
   Bookmark,
@@ -46,26 +47,38 @@ const getWeatherIcon = (icon: string) => {
 };
 
 const WeatherComponent = ({ data, rain }: { data: any; rain: any }) => {
+  const [isSaved, setIsSaved] = useState(false);
   const date = new Date().toDateString();
   const name = data.name;
   const temp = Math.round(data.main.temp);
   const weather = data.weather[0].main;
   const icon = data.weather[0].icon;
 
-  const handleSaveHover = () => {};
+  const [existingCities, setExistingCities] = useState<string[]>(() => {
+    const key = localStorage.getItem('cities') || '';
+    return key ? JSON.parse(key) : [];
+  });
+
+  useEffect(() => {
+    setIsSaved(existingCities.includes(name));
+  }, [name, existingCities]);
 
   const handleSaveClick = () => {
-    const existingCitiesKey = localStorage.getItem('cities');
-    const existingCities = existingCitiesKey
-      ? JSON.parse(existingCitiesKey)
-      : [];
-
     if (!existingCities.includes(name)) {
-      existingCities.push(name);
-      localStorage.setItem('cities', JSON.stringify(existingCities));
+      const updatedCities = [...existingCities, name];
+      localStorage.setItem('cities', JSON.stringify(updatedCities));
+      setExistingCities(updatedCities);
+      setIsSaved(true);
     } else {
       console.log(`City "${name}" is already saved.`);
     }
+  };
+
+  const handleRemoveSave = () => {
+    const updatedCities = existingCities.filter((city) => city !== name);
+    localStorage.setItem('cities', JSON.stringify(updatedCities));
+    setExistingCities(updatedCities);
+    setIsSaved(false);
   };
 
   return (
@@ -86,15 +99,25 @@ const WeatherComponent = ({ data, rain }: { data: any; rain: any }) => {
             <Droplet className={styles.icon} fill='#212121' />
             <p className={styles.p}>Rain: {rain}%</p>
           </div>
-          <div
-            onMouseEnter={handleSaveHover}
-            onClick={handleSaveClick}
-            id={styles.save}
-            className={styles.conditionsContainer}
-          >
-            <Bookmark className={styles.icon} />
-            <p className={styles.p}>Save location</p>
-          </div>
+          {!isSaved ? (
+            <div
+              onClick={handleSaveClick}
+              id={styles.save}
+              className={styles.conditionsContainer}
+            >
+              <Bookmark className={styles.icon} />
+              <p className={styles.p}>Save location</p>
+            </div>
+          ) : (
+            <div
+              onClick={handleRemoveSave}
+              id={styles.save}
+              className={styles.conditionsContainer}
+            >
+              <Bookmark className={styles.icon} fill='#212121' />
+              <p className={styles.p}>Remove save</p>
+            </div>
+          )}
         </div>
       </div>
     </section>
