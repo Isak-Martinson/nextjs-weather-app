@@ -46,7 +46,15 @@ const getWeatherIcon = (icon: string) => {
   }
 };
 
-const WeatherComponent = ({ data, rain }: { data: any; rain: any }) => {
+const WeatherComponent = ({
+  data,
+  rain,
+  isWriting,
+}: {
+  data: any;
+  rain: any;
+  isWriting: boolean;
+}) => {
   const [isSaved, setIsSaved] = useState(false);
   const date = new Date().toDateString();
   const name = data.name;
@@ -97,7 +105,10 @@ const WeatherComponent = ({ data, rain }: { data: any; rain: any }) => {
   };
 
   return (
-    <section>
+    <section
+      id='weather-section'
+      className={`${isWriting ? styles.writing : ''}`}
+    >
       <div>
         <div id={styles.firstSection}>
           <h1 id={styles.h1}>{name}</h1>

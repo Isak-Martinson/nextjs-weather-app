@@ -1,3 +1,15 @@
+.writing{
+    opacity: 0.2;
+}
+
+.submitted {
+    opacity: 1;
+}
+
+.section {
+    opacity: 1;
+}
+
 .conditionsContainer {
     display: flex;
     flex-direction: row;
@@ -5,12 +17,7 @@
     margin-bottom: 16px;
 }
 
-#firstSection {
-    /* margin-bottom: 40px; */
-}
-
 #secondSection {
-    /* margin-top: auto; */
     display: grid;
     grid-template-columns: 1fr 1fr ;
     grid-template-rows: 1fr 1fr;

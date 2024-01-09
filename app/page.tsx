@@ -11,7 +11,8 @@ interface DailyForecast {
 }
 
 export default function Home() {
-  // const [savedCities, setSavedCities] = useState<Array<string>>([]);
+  const [isWriting, setIsWriting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
   const [savedLat, setSavedLat] = useState<Array<string>>([]);
   const [savedLon, setSavedLon] = useState<Array<string>>([]);
   const [weather, setWeather] = useState<object | null>(null);
@@ -46,7 +47,6 @@ export default function Home() {
     } catch (error) {
       console.error('error fetching data: ', error);
     } finally {
-      // makeApiCallWeather(data[0].lat, data[0].lon);
     }
   };
 
@@ -82,9 +82,21 @@ export default function Home() {
 
   const makeApiCallCallback = useCallback(makeApiCallWeather, []);
 
+  const handleInputChange = (value: any) => {
+    setIsWriting(value !== '');
+  };
+
+  const handleBlur = () => {
+    setIsWriting(false);
+  };
+
   return (
     <main className={styles.main}>
-      <SearchComponent handleApiCall={makeApiCallCity} />
+      <SearchComponent
+        handleApiCall={makeApiCallCity}
+        onInputChange={handleInputChange}
+        onBlur={handleBlur}
+      />
       {loading && savedLat.length !== 0 ? (
         <div className={styles.spinner}></div>
       ) : (
@@ -93,11 +105,12 @@ export default function Home() {
             <WeatherComponent
               data={weather}
               rain={JSON.stringify(dailyForecast?.list[0].pop * 100)}
+              isWriting={isWriting}
             />
           )}
 
           {weather !== null && dailyForecast !== null && (
-            <ForecastComponent data={dailyForecast} />
+            <ForecastComponent data={dailyForecast} isWriting={isWriting} />
           )}
         </>
       )}
