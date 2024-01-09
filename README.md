@@ -1,7 +1,6 @@
 # Weather App
 
-I've designed and developed a brutalistic front-end weather app using Next.js, typescript and OpenWeatherMap API.
-Site is live at: [brutalweather.vercel.app](https://brutalweather.vercel.app)
+I've designed and developed a brutalistic front-end weather app using Next.js, typescript and OpenWeatherMaps free tier API. Site is live at: [brutalweather.vercel.app](https://brutalweather.vercel.app)
 
 ## Getting Started
 

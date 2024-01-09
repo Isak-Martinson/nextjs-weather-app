@@ -3,38 +3,43 @@ import { ChevronRight, ChevronLeft } from 'feather-icons-react';
 import styles from './slider.module.css';
 
 const SliderComponent = ({
-  savedCities,
-  savedCitiesApiCall,
+  savedLat,
+  savedLon,
+  savedLatLonApiCall,
 }: {
-  savedCities: Array<string>;
-  savedCitiesApiCall: Function;
+  savedLat: Array<string>;
+  savedLon: Array<string>;
+  savedLatLonApiCall: Function;
 }) => {
-  const [cityIndex, setCityIndex] = useState(0);
+  const [latLonIndex, setLatLonIndex] = useState(0);
 
   useEffect(() => {
-    if (savedCities.length > 0) {
-      const selectedCity = savedCities[cityIndex];
+    if (savedLat.length > 0 && savedLon.length > 0) {
+      const selectedLat = savedLat[latLonIndex];
+      const selectedLon = savedLon[latLonIndex];
 
-      savedCitiesApiCall(selectedCity);
+      savedLatLonApiCall(selectedLat, selectedLon);
     }
-  }, [cityIndex, savedCities, savedCitiesApiCall]);
+  }, [latLonIndex, savedLat, savedLon, savedLatLonApiCall]);
 
   const handleNextCity = () => {
-    setCityIndex((prevIndex) => (prevIndex + 1) % savedCities.length);
+    setLatLonIndex((prevIndex) => (prevIndex + 1) % savedLat.length);
   };
   const handlePrevCity = () => {
-    setCityIndex(
-      (prevIndex) => (prevIndex - 1 + savedCities.length) % savedCities.length
+    setLatLonIndex(
+      (prevIndex) => (prevIndex - 1 + savedLat.length) % savedLat.length
     );
   };
   return (
     <div id={styles.sliderContainer}>
-      {savedCities.length > 1 ? (
+      {savedLat.length > 1 ? (
         <div id={styles.slider}>
           <ChevronLeft onClick={handlePrevCity} />
-          {savedCities.map((test, index) => (
+          {savedLat.map((test, index) => (
             <div
-              className={cityIndex === index ? styles.dotSelected : styles.dot}
+              className={
+                latLonIndex === index ? styles.dotSelected : styles.dot
+              }
               key={index}
             ></div>
           ))}

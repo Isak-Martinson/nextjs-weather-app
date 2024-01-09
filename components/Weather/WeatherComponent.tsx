@@ -53,21 +53,31 @@ const WeatherComponent = ({ data, rain }: { data: any; rain: any }) => {
   const temp = Math.round(data.main.temp);
   const weather = data.weather[0].main;
   const icon = data.weather[0].icon;
+  const lat = JSON.stringify(data.coord.lat);
+  const lon = JSON.stringify(data.coord.lon);
 
-  const [existingCities, setExistingCities] = useState<string[]>(() => {
-    const key = localStorage.getItem('cities') || '';
-    return key ? JSON.parse(key) : [];
+  const [existingLat, setExistingLat] = useState<string[]>(() => {
+    const keyLat = localStorage.getItem('lat') || '';
+    return keyLat ? JSON.parse(keyLat) : [];
+  });
+
+  const [existingLon, setExistingLon] = useState<string[]>(() => {
+    const keyLon = localStorage.getItem('lon') || '';
+    return keyLon ? JSON.parse(keyLon) : [];
   });
 
   useEffect(() => {
-    setIsSaved(existingCities.includes(name));
-  }, [name, existingCities]);
+    setIsSaved(existingLat.includes(lat));
+  }, [existingLat, existingLon, lat, lon]);
 
   const handleSaveClick = () => {
-    if (!existingCities.includes(name)) {
-      const updatedCities = [...existingCities, name];
-      localStorage.setItem('cities', JSON.stringify(updatedCities));
-      setExistingCities(updatedCities);
+    if (!existingLat.includes(lat) && !existingLon.includes(lon)) {
+      const updatedLat = [...existingLat, lat];
+      const updatedLon = [...existingLon, lon];
+      localStorage.setItem('lat', JSON.stringify(updatedLat));
+      localStorage.setItem('lon', JSON.stringify(updatedLon));
+      setExistingLat(updatedLat);
+      setExistingLon(updatedLon);
       setIsSaved(true);
     } else {
       console.log(`City "${name}" is already saved.`);
@@ -75,9 +85,14 @@ const WeatherComponent = ({ data, rain }: { data: any; rain: any }) => {
   };
 
   const handleRemoveSave = () => {
-    const updatedCities = existingCities.filter((city) => city !== name);
-    localStorage.setItem('cities', JSON.stringify(updatedCities));
-    setExistingCities(updatedCities);
+    const updatedLats = existingLat.filter((latitude) => latitude !== lat);
+    localStorage.setItem('lat', JSON.stringify(updatedLats));
+
+    const updatedLons = existingLon.filter((longitude) => longitude !== lon);
+    localStorage.setItem('lon', JSON.stringify(updatedLons));
+
+    setExistingLat(updatedLats);
+    setExistingLon(updatedLons);
     setIsSaved(false);
   };
 

@@ -11,67 +11,102 @@ interface DailyForecast {
 }
 
 export default function Home() {
-  const [savedCities, setSavedCities] = useState<Array<string>>([]);
+  // const [savedCities, setSavedCities] = useState<Array<string>>([]);
+  const [savedLat, setSavedLat] = useState<Array<string>>([]);
+  const [savedLon, setSavedLon] = useState<Array<string>>([]);
   const [weather, setWeather] = useState<object | null>(null);
   const [dailyForecast, setDailyForecast] = useState<DailyForecast | null>(
     null
   );
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
-      const cities = window.localStorage.getItem('cities');
-      if (cities) {
-        setSavedCities(JSON.parse(cities));
+      const lat = window.localStorage.getItem('lat');
+      const lon = window.localStorage.getItem('lon');
+      if (lat && lon) {
+        setSavedLat(JSON.parse(lat));
+        setSavedLon(JSON.parse(lon));
       } else {
         console.log('no cities saved');
       }
     }
   }, []);
 
-  const makeApiCall = async (city: any) => {
-    const response = await fetch(
-      `/api/fetchCity?city=${encodeURIComponent(city)}`,
-      {
-        method: 'GET',
-      }
-    );
-    const data = await response.json();
-    setWeather(data);
-    makeApiCallDaily(data.coord.lat, data.coord.lon);
+  const makeApiCallCity = async (city: any) => {
+    try {
+      const response = await fetch(
+        `/api/fetchCity?city=${encodeURIComponent(city)}`,
+        {
+          method: 'GET',
+        }
+      );
+      const data = await response.json();
+      makeApiCallWeather(data[0].lat, data[0].lon);
+    } catch (error) {
+      console.error('error fetching data: ', error);
+    } finally {
+      // makeApiCallWeather(data[0].lat, data[0].lon);
+    }
   };
 
-  const makeApiCallCallback = useCallback(makeApiCall, []);
+  const makeApiCallWeather = async (lat: number, lon: number) => {
+    try {
+      const response = await fetch(`/api/FetchWeather?lat=${lat}&lon=${lon}`, {
+        method: 'GET',
+      });
+      const data = await response.json();
+      setWeather(data);
+      makeApiCallDaily(lat, lon);
+    } catch (error) {
+      console.error('error fetching data: ', error);
+    }
+  };
 
   const makeApiCallDaily = async (lat: number, lon: number) => {
-    const response = await fetch(
-      `/api/DailyForecast?lat=${encodeURIComponent(lat)}&lon=${lon}`,
-      {
-        method: 'GET',
-      }
-    );
-    const data = await response.json();
-    setDailyForecast(data);
+    try {
+      const response = await fetch(
+        `/api/DailyForecast?lat=${encodeURIComponent(lat)}&lon=${lon}`,
+        {
+          method: 'GET',
+        }
+      );
+      const data = await response.json();
+      setDailyForecast(data);
+    } catch (error) {
+      console.error('error fetching daily forecast data: ', error);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const makeApiCallCallback = useCallback(makeApiCallWeather, []);
 
   return (
     <main className={styles.main}>
-      <SearchComponent handleApiCall={makeApiCall} />
-      {weather !== null ? (
-        <WeatherComponent
-          data={weather}
-          rain={JSON.stringify(dailyForecast?.list[0].pop * 100)}
-        />
+      <SearchComponent handleApiCall={makeApiCallCity} />
+      {loading && savedLat.length !== 0 ? (
+        <div className={styles.spinner}></div>
       ) : (
-        <p>Search by any city in the searchbar</p>
+        <>
+          {weather !== null && (
+            <WeatherComponent
+              data={weather}
+              rain={JSON.stringify(dailyForecast?.list[0].pop * 100)}
+            />
+          )}
+
+          {weather !== null && dailyForecast !== null && (
+            <ForecastComponent data={dailyForecast} />
+          )}
+        </>
       )}
 
-      {weather !== null && dailyForecast !== null && (
-        <ForecastComponent data={dailyForecast} />
-      )}
-      {savedCities.length > 0 && (
+      {savedLat.length > 0 && savedLon.length > 0 && (
         <SliderComponent
-          savedCities={savedCities}
-          savedCitiesApiCall={makeApiCallCallback}
+          savedLat={savedLat}
+          savedLon={savedLon}
+          savedLatLonApiCall={makeApiCallCallback}
         />
       )}
     </main>

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import styles from './search.module.css';
-import { Search } from 'feather-icons-react';
 
 const SearchComponent = ({ handleApiCall }: { handleApiCall: Function }) => {
   const [city, setCity] = useState('');
@@ -30,7 +29,6 @@ const SearchComponent = ({ handleApiCall }: { handleApiCall: Function }) => {
         onChange={(e) => handleInputChange(e)}
         type='text'
       />
-      {/* <Search onClick={handleSubmit} /> */}
     </form>
   );
 };
