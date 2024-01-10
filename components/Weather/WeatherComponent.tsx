@@ -50,10 +50,12 @@ const WeatherComponent = ({
   data,
   rain,
   isWriting,
+  loading,
 }: {
   data: any;
   rain: any;
   isWriting: boolean;
+  loading: boolean;
 }) => {
   const [isSaved, setIsSaved] = useState(false);
   const date = new Date().toDateString();
@@ -73,6 +75,13 @@ const WeatherComponent = ({
     const keyLon = localStorage.getItem('lon') || '';
     return keyLon ? JSON.parse(keyLon) : [];
   });
+
+  useEffect(() => {
+    console.log('is loading? ', loading);
+    if (!loading) {
+      console.log('has loaded');
+    }
+  }, [loading]);
 
   useEffect(() => {
     setIsSaved(existingLat.includes(lat));
@@ -107,9 +116,9 @@ const WeatherComponent = ({
   return (
     <section
       id='weather-section'
-      className={`${isWriting ? styles.writing : ''}`}
+      className={`${isWriting ? styles.writing : styles.section}`}
     >
-      <div>
+      <div className={loading ? styles.loading : styles.hasLoaded}>
         <div id={styles.firstSection}>
           <h1 id={styles.h1}>{name}</h1>
           <p id={styles.date}>{date}</p>

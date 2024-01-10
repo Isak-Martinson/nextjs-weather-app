@@ -1,13 +1,24 @@
-.writing{
+@keyframes fadeIn {
+    from {opacity: 0.2;} to {opacity: 1;}
+}
+/* @keyframes fadeOut {
+    from {opacity: 0.2;} to {opacity: 0;}
+} */
+
+.loading {
     opacity: 0.2;
 }
 
-.submitted {
-    opacity: 1;
+.hasLoaded{
+    animation: fadeIn 0.5s ease;
 }
 
-.section {
-    opacity: 1;
+#weatherSection{
+    animation: fadeIn 3s ease;
+}
+
+.writing{
+    opacity: 0.2;
 }
 
 .conditionsContainer {

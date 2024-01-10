@@ -81,7 +81,9 @@ const ForecastComponent = ({
   return (
     <section
       id={styles.section}
-      className={isWriting ? styles.writing : styles.section}
+      className={`${isWriting ? styles.writing : styles.section} ${
+        styles.test
+      }`}
     >
       <ul className={styles.ul}>
         {dailyForecastList.map((test, index) => (
