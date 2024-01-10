@@ -51,9 +51,11 @@ const getWeatherIcon = (icon: string) => {
 const ForecastComponent = ({
   data,
   isWriting,
+  loading,
 }: {
   data: any;
   isWriting: boolean;
+  loading: boolean;
 }) => {
   const dailyForecastData = data?.list || [];
 
@@ -80,12 +82,15 @@ const ForecastComponent = ({
 
   return (
     <section
-      id={styles.section}
+      id={loading ? styles.sectionLoading : styles.section}
       className={`${isWriting ? styles.writing : styles.section} ${
         styles.test
       }`}
     >
-      <ul className={styles.ul}>
+      <ul
+        id={styles.ul}
+        className={loading ? styles.loading : styles.hasLoaded}
+      >
         {dailyForecastList.map((test, index) => (
           <div key={index} className={styles.forecastContainer}>
             <li className={styles.li}>

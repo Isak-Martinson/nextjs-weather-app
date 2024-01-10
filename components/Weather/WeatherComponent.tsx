@@ -77,13 +77,6 @@ const WeatherComponent = ({
   });
 
   useEffect(() => {
-    console.log('is loading? ', loading);
-    if (!loading) {
-      console.log('has loaded');
-    }
-  }, [loading]);
-
-  useEffect(() => {
     setIsSaved(existingLat.includes(lat));
   }, [existingLat, existingLon, lat, lon]);
 
@@ -114,10 +107,7 @@ const WeatherComponent = ({
   };
 
   return (
-    <section
-      id='weather-section'
-      className={`${isWriting ? styles.writing : styles.section}`}
-    >
+    <section className={`${isWriting ? styles.writing : styles.section}`}>
       <div className={loading ? styles.loading : styles.hasLoaded}>
         <div id={styles.firstSection}>
           <h1 id={styles.h1}>{name}</h1>

@@ -19,14 +19,6 @@ export default function Home() {
     null
   );
   const [loading, setLoading] = useState(true);
-  // const [previousWeather, setPreviousWeather] = useState({});
-
-  // useEffect(() => {
-  //   if (weather !== null) {
-  //     setPreviousWeather(weather);
-  //     console.log('weather useEffect');
-  //   }
-  // }, [weather]);
 
   useEffect(() => {
     if (typeof window !== 'undefined' && window.localStorage) {
@@ -35,9 +27,6 @@ export default function Home() {
       if (lat && lon) {
         setSavedLat(JSON.parse(lat));
         setSavedLon(JSON.parse(lon));
-        if (savedLat.length > 0) {
-          console.log('savedLat, ', savedLat.length);
-        }
       } else {
         console.log('no cities saved');
       }
@@ -55,7 +44,6 @@ export default function Home() {
       );
       const data = await response.json();
       makeApiCallWeather(data[0].lat, data[0].lon);
-      console.log('call city', data);
     } catch (error) {
       console.error('error fetching data: ', error);
     } finally {
@@ -70,10 +58,6 @@ export default function Home() {
       const data = await response.json();
       setWeather(data);
       makeApiCallDaily(lat, lon);
-      // if (weather === null) {
-      //   setPreviousWeather(data);
-      // }
-      console.log('call weather', data);
     } catch (error) {
       console.error('error fetching data: ', error);
     }
@@ -89,7 +73,6 @@ export default function Home() {
       );
       const data = await response.json();
       setDailyForecast(data);
-      console.log('daily call, ', data);
     } catch (error) {
       console.error('error fetching daily forecast data: ', error);
     } finally {
@@ -120,7 +103,6 @@ export default function Home() {
         <>
           {weather !== null && (
             <WeatherComponent
-              // data={loading ? previousWeather : weather}
               data={weather}
               rain={JSON.stringify(dailyForecast?.list[0].pop * 100)}
               isWriting={isWriting}
@@ -129,7 +111,11 @@ export default function Home() {
           )}
 
           {weather !== null && dailyForecast !== null && (
-            <ForecastComponent data={dailyForecast} isWriting={isWriting} />
+            <ForecastComponent
+              data={dailyForecast}
+              isWriting={isWriting}
+              loading={loading}
+            />
           )}
         </>
       )}
